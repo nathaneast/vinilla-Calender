@@ -1,0 +1,26 @@
+.container{
+    display: flex;
+    /* border: 1px solid black; */
+    /* width: 830px; */
+}
+
+.clickDate{
+    border: 1px solid black;
+    width: 400px;
+    margin: 15px;
+}
+
+.calender{
+    width: auto;
+}
+
+.now-month-year{
+    display: flex;
+    justify-content: space-between;
+}
+
+table th,td{
+    font-size: 35px;
+    padding: 10px;
+    text-align: center;
+}
