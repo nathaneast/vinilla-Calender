@@ -1,26 +1,38 @@
 .container{
     display: flex;
-    /* border: 1px solid black; */
-    /* width: 830px; */
+    justify-content: center;
+    border: 3.5px solid black;
+    width: 750px;
 }
 
+/* 클릭 날짜 */
 .clickDate{
-    border: 1px solid black;
-    width: 400px;
-    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
 }
 
-.calender{
-    width: auto;
+.clickResult-Day{
+    margin-top: 30px;
+    font-size: 33px;
 }
 
+.clickResult-Date{
+    margin: 10px 0px;
+    font-size: 200px;
+}
+
+/* 달력 */
 .now-month-year{
     display: flex;
     justify-content: space-between;
+    height: 90px;
+    font-size: 31px;
 }
 
 table th,td{
-    font-size: 35px;
     padding: 10px;
     text-align: center;
+    font-size: 28px;
 }
