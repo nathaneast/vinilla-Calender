@@ -6,7 +6,7 @@
 }
 
 /* 클릭 날짜 */
-.clickDate{
+.clickResult{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +31,7 @@
     font-size: 31px;
 }
 
-table th,td{
+.calender th,td{
     padding: 10px;
     text-align: center;
     font-size: 28px;
