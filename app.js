@@ -9,8 +9,8 @@ var nowDate = new Date();
 var nowClick;
 
 function removeCalender() {
-    if (nowClick !== undefined) {
-        nowClick.removeAttribute("style");
+    if(nowClick !== undefined) {
+        nowClick.classList.remove("clickEffect");
         nowClick = undefined;
     }
     var allDate = date.children[0].children.length;
@@ -18,9 +18,7 @@ function removeCalender() {
         for (var j = 0; j < 7; j++) {
             var removeDate = date.children[0].children[i].children[j];
             removeDate.innerText = "";
-            if (removeDate.className !== "") {
-                removeDate.classList.remove(removeDate.className);
-            }
+            removeDate.classList.remove(removeDate.classList[0]);
             removeDate.removeEventListener("click", clickDate);
         }
     }
@@ -40,20 +38,17 @@ function calenderHandler(event) {
 
 function clickDate(event) {
     if (nowClick === undefined) {
-        event.target.style.color = "white";
-        event.target.style.background = "red";
+        event.target.classList.add("clickEffect");
         nowClick = event.target;
     } else if (nowClick === event.target) {
-        nowClick.removeAttribute("style");
+        event.target.classList.remove("clickEffect");
         nowClick = undefined;
     } else {
-        nowClick.removeAttribute("style");
-        event.target.style.color = "white";
-        event.target.style.background = "red";
+        nowClick.classList.remove("clickEffect");
+        event.target.classList.add("clickEffect");
         nowClick = event.target;
     }
-
-    var clickDateValue = event.target.className;
+    var clickDateValue = event.target.classList[0];
     var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateValue);
     clickView(clickDateResult);
 }
@@ -65,17 +60,20 @@ function clickView(dateValue) {
     clickViewDay.innerText = new Intl.DateTimeFormat('en-US', options).format(dateValue);
     clickViewDate.innerText = dateValue.getDate();
 
+    if (clickViewDate.classList.length > 1 && clickViewDay.classList.length > 1) {
+        clickViewDate.classList.remove(clickViewDate.classList[1]);
+        clickViewDay.classList.remove(clickViewDay.classList[1]);
+    }
+
     if (dateValue.getDay() === 6) {
-        clickViewDate.style.color = "blue";
-        clickViewDay.style.color = "blue";
-
+        clickViewDate.classList.add("changeColorBlue");
+        clickViewDay.classList.add("changeColorBlue");
     } else if (dateValue.getDay() === 0) {
-        clickViewDate.style.color = "red";
-        clickViewDay.style.color = "red";
-
+        clickViewDate.classList.add("changeColorRed");
+        clickViewDay.classList.add("changeColorRed");
     } else {
-        clickViewDate.style.color = "black";
-        clickViewDay.style.color = "black";
+        clickViewDate.classList.add("changeColorBlack");
+        clickViewDay.classList.add("changeColorBlack");
     }
 }
 
@@ -83,21 +81,17 @@ function viewCalender() {
     var inputWeek = 1;
     var inputDay;
     var firstDay = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1).getDay();
-    //이번년도 ,달의 1일의 요일 num값으로 가져옴
     var lastDate = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, 0).getDate();
-    //이번년도 ,달의 마지막 날짜
 
-    //달력 상단 현재 년도,월 변경 
     var nowMonthYear = document.querySelector(".month-year");
     var options = {
         month: "long"
     };
-
     nowMonthYear.innerText = new Intl.DateTimeFormat('en-US', options).format(nowDate) + " " + nowDate.getFullYear();
 
     for (var i = 1; i <= lastDate; i++) {
         if (i === 1) {
-            //월의 첫 날짜의 요일에 들어가는 값
+            //해당 월 1일의 요일에 들어가는 값
             var firstDate = date.children[0].children[inputWeek].children[firstDay];
             firstDate.innerText = i;
             firstDate.addEventListener("click", clickDate);
@@ -107,16 +101,17 @@ function viewCalender() {
         } else {
             if (inputDay < 7) {
                 //월~금요일에 들어가는 값
-                var dayMonToSat = date.children[0].children[inputWeek].children[inputDay];
-                dayMonToSat.innerText = i;
-                dayMonToSat.addEventListener("click", clickDate);
-                dayMonToSat.classList.add(i);
+                var dayOther = date.children[0].children[inputWeek].children[inputDay];
+                dayOther.innerText = i;
+                dayOther.addEventListener("click", clickDate);
+                dayOther.classList.add(i);
                 inputDay++;
             } else {
                 //일요일에 들어가는 값
                 inputWeek++;
                 inputDay = 0;
                 var daySun = date.children[0].children[inputWeek].children[inputDay];
+                //변수 따로 지정 이유 : 주가 바뀌어서
                 daySun.innerText = i;
                 daySun.addEventListener("click", clickDate);
                 daySun.classList.add(i);

@@ -23,6 +23,23 @@
     font-size: 200px;
 }
 
+.clickEffect{
+    color : white;
+    background: red;
+}
+
+.changeColorBlack {
+    color: black;
+}
+
+.changeColorRed {
+    color: red;
+}
+
+.changeColorBlue {
+    color: blue;
+}
+
 /* 달력 */
 .now-month-year{
     display: flex;
@@ -35,4 +52,12 @@
     padding: 10px;
     text-align: center;
     font-size: 28px;
+}
+
+.sun{
+    color: red;
+}
+
+.sat{
+    color: blue;
 }
