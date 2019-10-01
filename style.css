@@ -1,6 +1,9 @@
 .container{
     display: flex;
-    justify-content: center;
+}
+
+.allCalender{
+    display: flex;
     border: 3.5px solid black;
     width: 750px;
 }
@@ -41,14 +44,14 @@
 }
 
 /* 달력 */
-.now-month-year{
+.calender-Month-Year{
     display: flex;
     justify-content: space-between;
     height: 90px;
     font-size: 31px;
 }
 
-.calender th,td{
+.calender-Date th,td{
     padding: 10px;
     text-align: center;
     font-size: 28px;
@@ -61,3 +64,24 @@
 .sat{
     color: blue;
 }
+
+/* 투두리스트 */
+.todos{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.todoList{
+    display: flex;
+}
+
+.todo{
+    width:300px;
+}
+
+.done{
+    width:300px;
+}
+
+

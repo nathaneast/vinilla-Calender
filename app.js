@@ -1,4 +1,4 @@
-var date = document.querySelector(".nowCalender");
+var date = document.querySelector(".calender-Date");
 var backMonth = document.querySelector(".backMonth");
 var nextMonth = document.querySelector(".nextMonth");
 var clickViewDay = document.querySelector(".clickResult-Day");
@@ -8,8 +8,18 @@ var nowDate = new Date();
 //버튼 누름에 따라서 바뀌는 년도,월
 var nowClick;
 
+function viewTodoList(todoDate) {
+    //todoDate : 클릭날짜
+    //클릭해당 날짜의 YMD : 객체명
+    var month = todoDate.getMonth() + 1;
+    var monthName = `${month < 10 ? "0" + month : month}`;
+    var dateName = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
+    var todoKey = `todo${todoDate.getFullYear()}${monthName}${dateName}`;
+    console.log(todoKey);
+}
+
 function removeCalender() {
-    if(nowClick !== undefined) {
+    if (nowClick !== undefined) {
         nowClick.classList.remove("clickEffect");
         nowClick = undefined;
     }
@@ -51,6 +61,7 @@ function clickDate(event) {
     var clickDateValue = event.target.classList[0];
     var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateValue);
     clickView(clickDateResult);
+    viewTodoList(clickDateResult);
 }
 
 function clickView(dateValue) {
@@ -124,6 +135,7 @@ function viewCalender() {
 function init() {
     viewCalender();
     clickView(nowDate);
+    viewTodoList(nowDate);
     nextMonth.addEventListener("click", calenderHandler);
     backMonth.addEventListener("click", calenderHandler);
 }
