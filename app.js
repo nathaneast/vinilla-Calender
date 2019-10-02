@@ -13,19 +13,37 @@ var nowDate = new Date();
 var nowClick;
 var todoKey;
 
-
-
+    var value = {
+        "todo": [],
+        "done": []
+    }
 
 function addTodoList() {
+    //값을 추가하려면 , 로컬 스토리지에서 값을 받고
+    //추가한 후에 로컬 스토리지에 값 넣기
         var li = document.createElement("li");
         li.innerText = inputTodo.value;
         todoList.appendChild(li);
+        // console.log(todoKey);
+        console.log(getTodo);
+        var getTodo = sessionStorage.getItem(todoKey);
 
-        var a = [];
-        a.push(inputTodo.value);
-        var b = JSON.stringify(a);
+        if(getTodo !== null) {
+            //투두값이 있을때
+            
+        } else {
+         var saveTodo = value;
+        saveTodo.todo.push(inputTodo.value);
+        JSON.stringify(saveTodo);
+         sessionStorage.setItem(todoKey, saveTodo);
+        }
 
-        sessionStorage.setItem(todoKey,b);
+        // var a = [];
+        // a.push(inputTodo.value);
+        // var b = JSON.stringify(a);
+        // sessionStorage.setItem(todoKey,b);
+
+        
         inputTodo.value = "";
 }
 
@@ -36,17 +54,20 @@ function viewTodoList(todoDate) {
     var monthValue = `${month < 10 ? "0" + month : month}`;
     var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
     todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
-    // var getTodo = localStorage.getItem(todoKey);
+    // var getTodo = sessionStorage.getItem(todoKey);
     //로컬스토리지에 투두키값이 있을때
     // if (getTodo !== null) {
-       
+       /* 
+       var a = getTodo;
+       var b = JOSN.parseInt(a);
+       todokey.todo[] 배열 접근 ?
+       */
     // }
     //로컬스토리지에 값 추가
     // console.log(todoKey);
     // console.log(inputTodo.value);
 
     // console.log(todoKey);
-
 }
 
 
