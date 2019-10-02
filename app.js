@@ -4,19 +4,51 @@ var nextMonth = document.querySelector(".nextMonth");
 var clickViewDay = document.querySelector(".clickResult-Day");
 var clickViewDate = document.querySelector(".clickResult-Date");
 
+var inputTodo = document.querySelector(".inputTodo");
+var todoList = document.querySelector(".todo-List");
+var doneList = document.querySelector(".done-List");
+
 var nowDate = new Date();
 //버튼 누름에 따라서 바뀌는 년도,월
 var nowClick;
+var todoKey;
+
+
+
+
+function addTodoList() {
+        var li = document.createElement("li");
+        li.innerText = inputTodo.value;
+        todoList.appendChild(li);
+
+        var a = [];
+        a.push(inputTodo.value);
+        var b = JSON.stringify(a);
+
+        sessionStorage.setItem(todoKey,b);
+        inputTodo.value = "";
+}
 
 function viewTodoList(todoDate) {
     //todoDate : 클릭날짜
     //클릭해당 날짜의 YMD : 객체명
     var month = todoDate.getMonth() + 1;
-    var monthName = `${month < 10 ? "0" + month : month}`;
-    var dateName = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
-    var todoKey = `todo${todoDate.getFullYear()}${monthName}${dateName}`;
-    console.log(todoKey);
+    var monthValue = `${month < 10 ? "0" + month : month}`;
+    var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
+    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
+    // var getTodo = localStorage.getItem(todoKey);
+    //로컬스토리지에 투두키값이 있을때
+    // if (getTodo !== null) {
+       
+    // }
+    //로컬스토리지에 값 추가
+    // console.log(todoKey);
+    // console.log(inputTodo.value);
+
+    // console.log(todoKey);
+
 }
+
 
 function removeCalender() {
     if (nowClick !== undefined) {
@@ -47,6 +79,13 @@ function calenderHandler(event) {
 }
 
 function clickDate(event) {
+    while (todoList.children.length > 0 ) { 
+        todoList.firstChild.remove();
+    }
+    while (doneList.children.length > 0 ) { 
+        todoList.firstChild.remove();
+    }
+ 
     if (nowClick === undefined) {
         event.target.classList.add("clickEffect");
         nowClick = event.target;
@@ -138,5 +177,10 @@ function init() {
     viewTodoList(nowDate);
     nextMonth.addEventListener("click", calenderHandler);
     backMonth.addEventListener("click", calenderHandler);
+    inputTodo.addEventListener("keydown", function (event) {
+        if(event.key === "Enter" && inputTodo.value !== "") {
+            addTodoList();
+        }
+    });
 }
 init();

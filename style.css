@@ -57,14 +57,6 @@
     font-size: 28px;
 }
 
-.sun{
-    color: red;
-}
-
-.sat{
-    color: blue;
-}
-
 /* 투두리스트 */
 .todos{
     width: auto;
