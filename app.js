@@ -13,61 +13,90 @@ var nowDate = new Date();
 var nowClick;
 var todoKey;
 
-    var value = {
-        "todo": [],
-        "done": []
-    }
+var todoListStorage = {};
 
-function addTodoList() {
-    //값을 추가하려면 , 로컬 스토리지에서 값을 받고
-    //추가한 후에 로컬 스토리지에 값 넣기
-        var li = document.createElement("li");
-        li.innerText = inputTodo.value;
-        todoList.appendChild(li);
-        // console.log(todoKey);
-        console.log(getTodo);
-        var getTodo = sessionStorage.getItem(todoKey);
-
-        if(getTodo !== null) {
-            //투두값이 있을때
-            
-        } else {
-         var saveTodo = value;
-        saveTodo.todo.push(inputTodo.value);
-        JSON.stringify(saveTodo);
-         sessionStorage.setItem(todoKey, saveTodo);
-        }
-
-        // var a = [];
-        // a.push(inputTodo.value);
-        // var b = JSON.stringify(a);
-        // sessionStorage.setItem(todoKey,b);
-
-        
-        inputTodo.value = "";
+function todoListForm() {
+    this.todos = []; 
+    this.dones = [];
 }
 
-function viewTodoList(todoDate) {
-    //todoDate : 클릭날짜
-    //클릭해당 날짜의 YMD : 객체명
+function addTodoList() {
     var month = todoDate.getMonth() + 1;
     var monthValue = `${month < 10 ? "0" + month : month}`;
     var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
     todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
-    // var getTodo = sessionStorage.getItem(todoKey);
-    //로컬스토리지에 투두키값이 있을때
-    // if (getTodo !== null) {
+
+    var selectTodo = new todoListForm();
+    if (todoListStorage[todoKey] === undefined) {
+    //     //저장소에 키값 없으면
+        selectTodo.todos.push(inputTodo.value);
+    //     // console.log(selectTodo);
+        todoListStorage[todoKey] = selectTodo;
+    //     // console.log(todoListStorage);
+        console.log("투두키 없음");
+    } else {
+        console.log("투두키있음");
+    }
+    inputTodo.value = "";
+
+
+
+    //값을 추가하려면 , 로컬 스토리지에서 값을 받고
+    //추가한 후에 로컬 스토리지에 값 넣기
+    // var li = document.createElement("li");
+    // li.innerText = inputTodo.value;
+    // todoList.appendChild(li);
+
+    // var httpReq = new XMLHttpRequest();
+    // var todoForm = "json_todoForm.txt";
+    // httpReq.open("GET", todoForm);
+    // httpReq.onreadystatechange = function () {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         //ajax에서 폼값 받아오기
+
+    //         var getTodo = sessionStorage.getItem(todoKey);
+    //         // console.log(getTodo);
+
+    //         if (getTodo !== null) {
+    //             //투두값이 있을때
+    //             // console.log("투두값 있다")
+    //             JSON.parse(getTodo);
+    //             console.log(typeof (getTodo));
+    //             console.log(getTodo);
+    //         } else {
+    //             //투두값이 없을때     
+    //             var todoData = JSON.parse(this.response);
+    //             todoData.todos.push(inputTodo.value);
+    //             console.log(todoData);
+    //             // JSON.stringify(todoData);
+    //             sessionStorage.setItem(todoKey, todoData);
+    //             //추가한 투두값 넣고 세션에 전송
+    //             console.log("스트링" + todoData);
+                // inputTodo.value = "";
+    //         }
+    //     } 
+    // };
+    // httpReq.send();
+    
+}
+
+function viewTodoList(todoDate) {
+    //todoDate : 클릭날짜
+    // 클릭해당 날짜의 YMD : 객체명
+    var month = todoDate.getMonth() + 1;
+    var monthValue = `${month < 10 ? "0" + month : month}`;
+    var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
+    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
+    var getTodo = sessionStorage.getItem(todoKey);
+    // 로컬스토리지에 투두키값이 있을때
+    if (getTodo !== null) {
        /* 
        var a = getTodo;
        var b = JOSN.parseInt(a);
        todokey.todo[] 배열 접근 ?
        */
-    // }
-    //로컬스토리지에 값 추가
-    // console.log(todoKey);
-    // console.log(inputTodo.value);
-
-    // console.log(todoKey);
+    }
+    // 로컬스토리지에 값 추가
 }
 
 
