@@ -13,92 +13,80 @@ var nowDate = new Date();
 var nowClick;
 var todoKey;
 
+
 var todoListStorage = {};
 
-function todoListForm() {
-    this.todos = []; 
-    this.dones = [];
+function TodoListForm() {
+        this.todos = [],
+        this.dones = []
+}
+
+
+
+function todoRemove(e) {
+    var btn = document.createElement("button");
+    e.target.appendChild(btn);
+    e.preventDefault();
 }
 
 function addTodoList() {
-    var month = todoDate.getMonth() + 1;
-    var monthValue = `${month < 10 ? "0" + month : month}`;
-    var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
-    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
-
-    var selectTodo = new todoListForm();
     if (todoListStorage[todoKey] === undefined) {
-    //     //저장소에 키값 없으면
+        //저장소에 투두키값 없으면
+        var selectTodo = new TodoListForm();
         selectTodo.todos.push(inputTodo.value);
-    //     // console.log(selectTodo);
         todoListStorage[todoKey] = selectTodo;
-    //     // console.log(todoListStorage);
-        console.log("투두키 없음");
     } else {
-        console.log("투두키있음");
+        //저장소에 투두키값 있으면
+        var addTodo = todoListStorage[todoKey];
+        addTodo.todos.push(inputTodo.value);
+        todoListStorage[todoKey] = addTodo;
     }
     inputTodo.value = "";
-
-
-
-    //값을 추가하려면 , 로컬 스토리지에서 값을 받고
-    //추가한 후에 로컬 스토리지에 값 넣기
-    // var li = document.createElement("li");
-    // li.innerText = inputTodo.value;
-    // todoList.appendChild(li);
-
-    // var httpReq = new XMLHttpRequest();
-    // var todoForm = "json_todoForm.txt";
-    // httpReq.open("GET", todoForm);
-    // httpReq.onreadystatechange = function () {
-    //     if (this.readyState == 4 && this.status == 200) {
-    //         //ajax에서 폼값 받아오기
-
-    //         var getTodo = sessionStorage.getItem(todoKey);
-    //         // console.log(getTodo);
-
-    //         if (getTodo !== null) {
-    //             //투두값이 있을때
-    //             // console.log("투두값 있다")
-    //             JSON.parse(getTodo);
-    //             console.log(typeof (getTodo));
-    //             console.log(getTodo);
-    //         } else {
-    //             //투두값이 없을때     
-    //             var todoData = JSON.parse(this.response);
-    //             todoData.todos.push(inputTodo.value);
-    //             console.log(todoData);
-    //             // JSON.stringify(todoData);
-    //             sessionStorage.setItem(todoKey, todoData);
-    //             //추가한 투두값 넣고 세션에 전송
-    //             console.log("스트링" + todoData);
-                // inputTodo.value = "";
-    //         }
-    //     } 
-    // };
-    // httpReq.send();
-    
+    viewTodoList();
 }
 
-function viewTodoList(todoDate) {
-    //todoDate : 클릭날짜
-    // 클릭해당 날짜의 YMD : 객체명
+function viewTodoList() {
+    //웹에 투두리스트 출력된 이전 값 제거
+    if (todoList.children.length > 0 || doneList.children.length > 0) {
+        listReset(todoList);
+        listReset(doneList);
+    }
+
+    if (todoListStorage[todoKey] !== undefined) {
+      addList(todoListStorage[todoKey].todos);
+      addList(todoListStorage[todoKey].dones);
+    }
+
+    function addList(list) {
+        for (var i = 0; i < list.length; i++) {
+            var li = document.createElement("li");
+            li.addEventListener("mouseover", todoRemove);
+            // li.addEventListener("mouseleave", function(e) {
+            //     e.target.removeChild(firstChild);
+            // });
+            todoList.appendChild(li);
+            li.innerText = list[i];
+        }
+    }
+
+    function listReset(listKey) {
+        if (listKey.children.length > 0) {
+            for (var i = 0; listKey.children.length > i; i++) {
+                //웹 투두리스트의 자식 삭제
+                listKey.removeChild(listKey.children[i]);
+            }
+        }
+    }
+  
+}
+
+function todoListHandler(todoDate) {
     var month = todoDate.getMonth() + 1;
     var monthValue = `${month < 10 ? "0" + month : month}`;
     var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
-    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`;
-    var getTodo = sessionStorage.getItem(todoKey);
-    // 로컬스토리지에 투두키값이 있을때
-    if (getTodo !== null) {
-       /* 
-       var a = getTodo;
-       var b = JOSN.parseInt(a);
-       todokey.todo[] 배열 접근 ?
-       */
-    }
-    // 로컬스토리지에 값 추가
+    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`; 
+    viewTodoList();
 }
-
 
 function removeCalender() {
     if (nowClick !== undefined) {
@@ -150,7 +138,7 @@ function clickDate(event) {
     var clickDateValue = event.target.classList[0];
     var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateValue);
     clickView(clickDateResult);
-    viewTodoList(clickDateResult);
+    todoListHandler(clickDateResult);
 }
 
 function clickView(dateValue) {
@@ -224,7 +212,7 @@ function viewCalender() {
 function init() {
     viewCalender();
     clickView(nowDate);
-    viewTodoList(nowDate);
+    todoListHandler(nowDate);
     nextMonth.addEventListener("click", calenderHandler);
     backMonth.addEventListener("click", calenderHandler);
     inputTodo.addEventListener("keydown", function (event) {
