@@ -26,7 +26,7 @@ function moveDoneList(e) {
     var chBox = e.target;
     var removeLi = e.target.parentNode;
     removeLi.classList.add("index");
-    for(var i = 0; todoList.children.length > i; i++) {}
+    for(var i = 0; todoList.children.length > i; i++) {
         if(todoList.children[i].className === "index") {
             // console.log(todoList.children[i]);
             todoListStorage[todoKey].dones.push(todoListStorage[todoKey].todos[i]);
