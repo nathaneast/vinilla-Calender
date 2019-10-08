@@ -1,4 +1,3 @@
-var body = document.querySelector("body");
 var date = document.querySelector(".calender-Date");
 var backMonth = document.querySelector(".backMonth");
 var nextMonth = document.querySelector(".nextMonth");
@@ -8,6 +7,7 @@ var clickViewDate = document.querySelector(".clickResult-Date");
 var inputTodo = document.querySelector(".inputTodo");
 var todoList = document.querySelector(".todo-List");
 var doneList = document.querySelector(".done-List");
+// var doneHeadLine = document.querySelector(".doneHeadLine");
 
 var nowDate = new Date();
 //버튼 누름에 따라서 바뀌는 년도,월
@@ -23,29 +23,37 @@ function TodoListForm() {
 
 
 function editTodo(e) {
+    var spans = document.querySelectorAll("span");
+    spans.forEach(function(span){
+        span.removeEventListener("dblclick", editTodo);   
+     });
+    
     var index;
     var li = e.target.parentNode;
     for (var i = 0; li.children.length > i; i++) {
         li.children[i].classList.add("hide");
     }
     var input = document.createElement("input");
+    input.setAttribute("placeholder", "Enter after editing ! !");
     li.appendChild(input);
-    li.classList.add("index");
+    li.classList.add("editIndex");
     for (var i = 0; li.parentNode.children.length > i; i++) {
-        if (li.parentNode.children[i].className === "index") {
+        if (li.parentNode.children[i].className === "editIndex") {
             index = i;
         }
     }
-    input.addEventListener("focusout", function() {
+    input.addEventListener("focusout", function () {
         li.removeChild(input);
         for (var i = 0; li.children.length > i; i++) {
-            if( li.children[i].className = "hide") {
+            if (li.children[i].className = "hide") {
                 li.children[i].classList.remove("hide");
             }
         }
-        body.removeEventListener("click", arguments.callee);
+        spans.forEach(function (span) {
+            span.addEventListener("dblclick", editTodo);
+        });
     });
-
+    
     input.addEventListener("keydown", function (event) {
         if (event.key === "Enter" && input.value !== "") {
             if (li.parentNode.className === "todo-List") {
@@ -61,12 +69,12 @@ function editTodo(e) {
 
 function moveTodo(e) {
     var chBox = e.target;
-    var removeLi = e.target.parentNode;
-    removeLi.classList.add("index");
+    var li = e.target.parentNode;
+    li.classList.add("moveIndex");
     var todos = todoListStorage[todoKey].todos;
     var dones = todoListStorage[todoKey].dones;
 
-    if(removeLi.parentNode.className === "todo-List") {
+    if(li.parentNode.className === "todo-List") {
         moveHandler(todoList,dones,todos);
     } else {
         moveHandler(doneList,todos,dones);
@@ -74,7 +82,7 @@ function moveTodo(e) {
 
     function moveHandler(list,add,del) {
         for (var i = 0; list.children.length > i; i++) {
-            if (list.children[i].className === "index") {
+            if (list.children[i].className === "moveIndex") {
                 add.push(del[i]);
                 del.splice(i, 1);
             }
@@ -86,15 +94,15 @@ function moveTodo(e) {
 function todoRemove(e) {
     var list = e.target.parentNode.parentNode;
     //todoList ,doneList중에서 어떤 값인지 최상위 태그를 변수에 담음
-    var removeLi = e.target.parentNode;
-    removeLi.classList.add("index");
+    var li = e.target.parentNode;
+    li.classList.add("RemoveIndex");
     for (var i = 0; list.children.length > i; i++) {
         if (list.className === "todo-List") {
-            if (list.children[i].className === "index") {
+            if (list.children[i].className === "RemoveIndex") {
                 todoListStorage[todoKey].todos.splice(i, 1);
             }
         } else {
-            if (list.children[i].className === "index") {
+            if (list.children[i].className === "RemoveIndex") {
                 todoListStorage[todoKey].dones.splice(i, 1);
             }
         }
@@ -155,6 +163,20 @@ function viewTodoList() {
                 if (list === doneList) {
                     checkBox.setAttribute("checked", "checked");
                 }
+                
+            }
+
+            // for (var i = 0; done.children.length > i; i++) {
+            //     if(done.children[i].className === "done-Delete") {
+            //         console.log(done.children[i]);
+            //         // done.children[i].removeChild(done.children[i]);
+            //     }
+            // }
+
+            if (doneList.children.length > 0) {
+                var delBtn = document.createElement("button");
+                // doneDelete.appendChild(delBtn);
+                delBtn.innerText = "clear";
             }
         }
     }
