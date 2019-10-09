@@ -8,6 +8,31 @@
     width: 750px;
 }
 
+ul{
+    list-style: none;
+}
+
+.todoElement{
+   margin-left:5px;
+   margin-right:20px;
+}
+
+button{
+    all: unset;
+    cursor: pointer;
+    padding: 3px 5px;
+    font-size : 10px;
+    border-radius: 10px;
+    background-color: #f1f2f6;
+    border: .5px solid #ced6e0;
+    color: #6e7fa3;
+    font-weight: bold;
+}
+
+.deleteBtn{
+    color: #eb4d4b;
+}
+
 /* 클릭 날짜 */
 .clickResult{
     display: flex;
@@ -62,22 +87,63 @@
     width: auto;
     display: flex;
     flex-direction: column;
+    width: 600px;
+    color: #353b48;
+}
+
+.todosHead{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.todosHeadLine{
+    font-size: 80px;
+    margin: 7px;
+}
+
+.todoList-count{
+    margin: 5px 0px 10px;
+    color: #353b48;
+    font-size: 20px;
+}
+
+.inputTodo{
+    padding: 8px;
+    width: 300px;
+    margin: 7px;
+    border-radius: 15px;
 }
 
 .todoList{
     display: flex;
+    margin: 7px;
 }
 
-.todo{
-    width:300px;
+.todo, .done{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
 }
 
-.done{
-    width:300px;
+.todoTitle span, .doneTitle span{
+    color: #353b48;
+    font-size: 17px;
+    font-weight: bold;
+} 
+
+.editing{
+    padding: 2px;
+    width: 130px;
+    /* margin: 7px; */
+    border-radius: 5px;
 }
 
 .hide{
     display: none;
 }
+
 
 

@@ -93,23 +93,31 @@
         </div>
     
         <div class="todos">
-            <div>
-                <h1 class="todos-YMD">todos</h1>
-                <input type="text" placeholder="Add todo Enter !" class="inputTodo">
+            <div class="todosHead">
+                <h1 class="todosHeadLine">todos</h1>
+                <p class="todoList-count"></p>
+                <input type="text" placeholder="Add todo Enter" class="inputTodo">
             </div>
-    
+        
             <div class="todoList">
                 <div class="todo">
-                    <span>What to do ? </span>
+                    <div class="todoTitle">
+                        <span>What to do ?</span>
+                        <button class="completed-Btn hide">Completed</button>
+                    </div>
                     <ul class="todo-List"></ul>
                 </div>
+        
                 <div class="done">
-                    <span class="doneHeadLine">done</span>
+                    <div class="doneTitle">
+                        <span>done</span>
+                        <button class="clear-Btn hide">clear</button>
+                    </div>
                     <ul class="done-List"></ul>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     <script src="app.js"></script>
 </body>
 
