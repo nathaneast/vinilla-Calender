@@ -186,14 +186,14 @@ function viewTodoList() {
                 li.appendChild(btn);
                 li.addEventListener("mouseover", function (e) {
                     for (var i = 0; e.target.children.length > i; i++) {
-                        if (e.target.children[i].tagName === "button") {
+                        if (e.target.children[i].className === "deleteBtn hide") {
                             e.target.children[i].classList.remove("hide");
                         }
                     }
                 });
                 li.addEventListener("mouseleave", function (e) {
                     for (var i = 0; e.target.children.length > i; i++) {
-                        if (e.target.children[i].className === "deletebtn") {
+                        if (e.target.children[i].className === "deleteBtn") {
                             e.target.children[i].classList.add("hide");
                         }
                     }

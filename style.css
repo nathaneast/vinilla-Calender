@@ -10,11 +10,11 @@
 
 ul{
     list-style: none;
+    box-sizing: content-box;
 }
 
-.todoElement{
-   margin-left:5px;
-   margin-right:20px;
+ul li{
+    padding: 2px;
 }
 
 button{
@@ -27,6 +27,10 @@ button{
     border: .5px solid #ced6e0;
     color: #6e7fa3;
     font-weight: bold;
+}
+
+button:hover{
+    border: 1px solid #889ab1;
 }
 
 .deleteBtn{
@@ -114,6 +118,11 @@ button{
     width: 300px;
     margin: 7px;
     border-radius: 15px;
+    border: 2px solid rgb(223, 217, 217);
+}
+
+.inputTodo:hover{
+    box-shadow: 0 5px 5px 0 rgba(221, 215, 215, 0.2), 0 15px 25px 0 rgba(206, 201, 201, 0.19);
 }
 
 .todoList{
@@ -134,16 +143,23 @@ button{
     font-weight: bold;
 } 
 
+.todoElement{
+    padding-left:5px;
+    padding-right:40px;
+}
+
+.todoElement:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .editing{
     padding: 2px;
     width: 130px;
-    /* margin: 7px; */
-    border-radius: 5px;
+    border-radius: 8px;
+    border: 1px solid #ced6e0;
 }
 
 .hide{
     display: none;
 }
-
-
-
