@@ -37,11 +37,14 @@ function clearDoneList() {
 }
 
 function editTodo(e) {
-    var spans = document.querySelectorAll("span");
-    spans.forEach(function(span){
-        span.removeEventListener("dblclick", editTodo);   
-     });
-    
+    console.log(e.target);
+    var todoEleAll = document.querySelectorAll(".todoElement");
+    todoEleAll.forEach(function(todoEle) {
+        todoEle.removeEventListener("dblclick", editTodo);
+    });
+    e.target.parentNode.removeEventListener("mouseover", todoMouseOver);
+    e.target.parentNode.removeEventListener("mouseleave", todoMouseLeave);
+
     var index;
     var li = e.target.parentNode;
     for (var i = 0; li.children.length > i; i++) {
@@ -51,16 +54,6 @@ function editTodo(e) {
     editInput.setAttribute("placeholder", "Enter after editing");
     editInput.classList.add("editing");
     li.appendChild(editInput);
-    editInput.addEventListener("focusout", function () {
-        li.removeChild(editInput);
-        for (var i = 0; li.children.length > i; i++) {
-            li.children[i].classList.remove("hide");
-        }
-        spans.forEach(function (span) {
-            span.addEventListener("dblclick", editTodo);
-        });
-    });
-    
     editInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter" && editInput.value !== "") {
             li.classList.add("editIndex");
@@ -76,6 +69,9 @@ function editTodo(e) {
             }
             viewTodoList();
         }
+    });
+    editInput.addEventListener("focusout", function () {
+        viewTodoList();
     });
 
 }
@@ -120,6 +116,28 @@ function todoRemove(e) {
         }
     }
     viewTodoList();
+}
+
+function todoMouseOver(e) {
+    for (var i = 0; e.target.children.length > i; i++) {
+        if (e.target.children[i].className === "deleteBtn hide") {
+            e.target.children[i].classList.remove("hide");
+        }
+        if (e.target.children[i].className === "todoElement") {
+            e.target.children[i].classList.add("todofocus");
+        }
+    }
+}
+
+function todoMouseLeave(e) {
+    for (var i = 0; e.target.children.length > i; i++) {
+        if (e.target.children[i].className === "deleteBtn") {
+            e.target.children[i].classList.add("hide");
+        }
+        if (e.target.children[i].className === "todoElement todofocus") {
+            e.target.children[i].classList.remove("todofocus");
+        }
+    }
 }
 
 function addTodoList() {
@@ -184,20 +202,8 @@ function viewTodoList() {
                 li.appendChild(checkBox);
                 li.appendChild(span);
                 li.appendChild(btn);
-                li.addEventListener("mouseover", function (e) {
-                    for (var i = 0; e.target.children.length > i; i++) {
-                        if (e.target.children[i].className === "deleteBtn hide") {
-                            e.target.children[i].classList.remove("hide");
-                        }
-                    }
-                });
-                li.addEventListener("mouseleave", function (e) {
-                    for (var i = 0; e.target.children.length > i; i++) {
-                        if (e.target.children[i].className === "deleteBtn") {
-                            e.target.children[i].classList.add("hide");
-                        }
-                    }
-                });
+                li.addEventListener("mouseover", todoMouseOver);
+                li.addEventListener("mouseleave", todoMouseLeave);
                 span.addEventListener("dblclick", editTodo);
                 btn.addEventListener("click", todoRemove);
                 checkBox.addEventListener("click", moveTodo);
@@ -362,8 +368,8 @@ function init() {
     todoListHandler(nowDate);
     nextMonth.addEventListener("click", calenderHandler);
     backMonth.addEventListener("click", calenderHandler);
-    inputTodo.addEventListener("keydown", function (event) {
-        if(event.key === "Enter" && inputTodo.value !== "") {
+    inputTodo.addEventListener("keydown", function(e) {
+        if(e.key === "Enter" && inputTodo.value !== "") {
             addTodoList();
         }
     });

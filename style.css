@@ -146,16 +146,17 @@ button:hover{
 .todoElement{
     padding-left:5px;
     padding-right:40px;
+    cursor: pointer;
+    width: 50px;
 }
 
-.todoElement:hover{
-    cursor: pointer;
+.todofocus{
     font-weight: bold;
 }
 
 .editing{
     padding: 2px;
-    width: 130px;
+    width: 10px;
     border-radius: 8px;
     border: 1px solid #ced6e0;
 }
