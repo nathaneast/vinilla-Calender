@@ -37,7 +37,6 @@ function clearDoneList() {
 }
 
 function editTodo(e) {
-    console.log(e.target);
     var todoEleAll = document.querySelectorAll(".todoElement");
     todoEleAll.forEach(function(todoEle) {
         todoEle.removeEventListener("dblclick", editTodo);
