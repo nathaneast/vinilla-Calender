@@ -38,7 +38,7 @@ function clearDoneList() {
 
 function editTodo(e) {
     var todoEleAll = document.querySelectorAll(".todoElement");
-    todoEleAll.forEach(function(todoEle) {
+    todoEleAll.forEach(function (todoEle) {
         todoEle.removeEventListener("dblclick", editTodo);
     });
     e.target.parentNode.removeEventListener("mouseover", todoMouseOver);
@@ -53,6 +53,27 @@ function editTodo(e) {
     editInput.setAttribute("placeholder", "Enter after editing");
     editInput.classList.add("editing");
     li.appendChild(editInput);
+    todoEleAll.forEach(function (todoEle) {
+        todoEle.addEventListener("dblclick", editTodo);
+    });
+    editInput.addEventListener("focusout", function () {
+            // e.target.parentNode.addEventListener("mouseover", todoMouseOver);
+            // e.target.parentNode.addEventListener("mouseleave", todoMouseLeave);
+            
+            // for (var i = 0; li.children.length > i; i++) {
+            //     li.children[i].classList.remove("hide");
+            //     if (li.children[i].className === "editing") {
+            //         li.children[i].remove();
+            //     }
+            //     // if (li.children[i].className === "deleteBtn") {
+            //     //     li.children[i].classList.add("hide");
+            //     // }
+            //     // if (li.children[i].className === "deleteBtn") {
+            //     //     li.children[i].classList.add("hide");
+            //     }
+            //     todoMouseLeave(e);
+            viewTodoList();
+        });
     editInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter" && editInput.value !== "") {
             li.classList.add("editIndex");
@@ -69,11 +90,8 @@ function editTodo(e) {
             viewTodoList();
         }
     });
-    editInput.addEventListener("focusout", function () {
-        viewTodoList();
-    });
-
 }
+
 
 function moveTodo(e) {
     var li = e.target.parentNode;
@@ -81,13 +99,13 @@ function moveTodo(e) {
     var todos = todoListStorage[todoKey].todos;
     var dones = todoListStorage[todoKey].dones;
 
-    if(li.parentNode.className === "todo-List") {
-        moveHandler(todoList,dones,todos);
+    if (li.parentNode.className === "todo-List") {
+        moveHandler(todoList, dones, todos);
     } else {
-        moveHandler(doneList,todos,dones);
+        moveHandler(doneList, todos, dones);
     }
 
-    function moveHandler(list,add,del) {
+    function moveHandler(list, add, del) {
         for (var i = 0; list.children.length > i; i++) {
             if (list.children[i].className === "moveIndex") {
                 add.push(del[i]);
@@ -123,7 +141,7 @@ function todoMouseOver(e) {
             e.target.children[i].classList.remove("hide");
         }
         if (e.target.children[i].className === "todoElement") {
-            e.target.children[i].classList.add("todofocus");
+            e.target.children[i].classList.add("todoFocus");
         }
     }
 }
@@ -133,8 +151,8 @@ function todoMouseLeave(e) {
         if (e.target.children[i].className === "deleteBtn") {
             e.target.children[i].classList.add("hide");
         }
-        if (e.target.children[i].className === "todoElement todofocus") {
-            e.target.children[i].classList.remove("todofocus");
+        if (e.target.children[i].className === "todoElement todoFocus") {
+            e.target.children[i].classList.remove("todoFocus");
         }
     }
 }
@@ -214,9 +232,9 @@ function viewTodoList() {
         }
     }
 
-    function resetList(listKey) {
-        while (listKey.children.length > 0) {
-            listKey.firstChild.remove();
+    function resetList(list) {
+        while (list.children.length > 0) {
+            list.firstChild.remove();
         }
     }
 
