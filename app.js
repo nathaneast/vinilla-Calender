@@ -23,6 +23,7 @@ function TodoListForm() {
         this.dones = []
 }
 
+//todo값 모두 done으로 이동
 function TodoCompleted() {
     for(var i = 0; todoListStorage[todoKey].todos.length > i; i++) {
         todoListStorage[todoKey].dones.push(todoListStorage[todoKey].todos[i]);
@@ -31,67 +32,56 @@ function TodoCompleted() {
     viewTodoList();
 }
 
+//done값 모두 삭제
 function clearDoneList() {
     todoListStorage[todoKey].dones.length = 0;
     viewTodoList();
 }
 
 function editTodo(e) {
-    var todoEleAll = document.querySelectorAll(".todoElement");
-    todoEleAll.forEach(function (todoEle) {
-        todoEle.removeEventListener("dblclick", editTodo);
-    });
-    e.target.parentNode.removeEventListener("mouseover", todoMouseOver);
-    e.target.parentNode.removeEventListener("mouseleave", todoMouseLeave);
-
+    var todoEleAll = document.querySelectorAll(".todoName");
     var index;
+    for (var i = 0; todoEleAll.length > i; i++) {
+        todoEleAll[i].removeEventListener("dblclick", editTodo);
+    }
     var li = e.target.parentNode;
+    li.classList.add("editIndex");
     for (var i = 0; li.children.length > i; i++) {
         li.children[i].classList.add("hide");
     }
     var editInput = document.createElement("input");
-    editInput.setAttribute("placeholder", "Enter after editing");
     editInput.classList.add("editing");
     li.appendChild(editInput);
-    todoEleAll.forEach(function (todoEle) {
-        todoEle.addEventListener("dblclick", editTodo);
-    });
-    editInput.addEventListener("focusout", function () {
-            // e.target.parentNode.addEventListener("mouseover", todoMouseOver);
-            // e.target.parentNode.addEventListener("mouseleave", todoMouseLeave);
-            
-            // for (var i = 0; li.children.length > i; i++) {
-            //     li.children[i].classList.remove("hide");
-            //     if (li.children[i].className === "editing") {
-            //         li.children[i].remove();
-            //     }
-            //     // if (li.children[i].className === "deleteBtn") {
-            //     //     li.children[i].classList.add("hide");
-            //     // }
-            //     // if (li.children[i].className === "deleteBtn") {
-            //     //     li.children[i].classList.add("hide");
-            //     }
-            //     todoMouseLeave(e);
-            viewTodoList();
-        });
-    editInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" && editInput.value !== "") {
-            li.classList.add("editIndex");
-            for (var i = 0; li.parentNode.children.length > i; i++) {
-                if (li.parentNode.children[i].className === "editIndex") {
-                    index = i;
-                }
-            }
+    editInput.focus();
+    for (var i = 0; li.parentNode.children.length > i; i++) {
+        if (li.parentNode.children[i].className === "todoElement editIndex") {
+            index = i;
+        }
+    }
+    if (li.parentNode.className === "todo-List") {
+        editInput.value = todoListStorage[todoKey].todos[index];
+    } else {
+        editInput.value = todoListStorage[todoKey].dones[index];
+    }
+    li.removeEventListener("mouseover", todoMouseOver);
+    li.removeEventListener("mouseleave", todoMouseLeave);
+    editInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && editInput.value !== "") {
             if (li.parentNode.className === "todo-List") {
                 todoListStorage[todoKey].todos[index] = editInput.value;
             } else {
                 todoListStorage[todoKey].dones[index] = editInput.value;
             }
-            viewTodoList();
+            // e.target.remove();
+            e.target.blur();
+            //이벤트 타겟이 포커스를 잃는다?
+            // viewTodoList();
         }
     });
+    editInput.addEventListener("blur", function (e) {
+        viewTodoList();
+    });
 }
-
 
 function moveTodo(e) {
     var li = e.target.parentNode;
@@ -107,7 +97,7 @@ function moveTodo(e) {
 
     function moveHandler(list, add, del) {
         for (var i = 0; list.children.length > i; i++) {
-            if (list.children[i].className === "moveIndex") {
+            if (list.children[i].className === "todoElement moveIndex") {
                 add.push(del[i]);
                 del.splice(i, 1);
             }
@@ -118,16 +108,16 @@ function moveTodo(e) {
 
 function todoRemove(e) {
     var list = e.target.parentNode.parentNode;
-    //todoList ,doneList중에서 어떤 값인지 최상위 태그를 변수에 담음
+    //버튼의.li.리스트 (투두,던)
     var li = e.target.parentNode;
     li.classList.add("RemoveIndex");
     for (var i = 0; list.children.length > i; i++) {
         if (list.className === "todo-List") {
-            if (list.children[i].className === "RemoveIndex") {
+            if (list.children[i].className === "todoElement RemoveIndex") {
                 todoListStorage[todoKey].todos.splice(i, 1);
             }
         } else {
-            if (list.children[i].className === "RemoveIndex") {
+            if (list.children[i].className === "todoElement RemoveIndex") {
                 todoListStorage[todoKey].dones.splice(i, 1);
             }
         }
@@ -140,7 +130,7 @@ function todoMouseOver(e) {
         if (e.target.children[i].className === "deleteBtn hide") {
             e.target.children[i].classList.remove("hide");
         }
-        if (e.target.children[i].className === "todoElement") {
+        if (e.target.children[i].className === "todoName") {
             e.target.children[i].classList.add("todoFocus");
         }
     }
@@ -151,7 +141,7 @@ function todoMouseLeave(e) {
         if (e.target.children[i].className === "deleteBtn") {
             e.target.children[i].classList.add("hide");
         }
-        if (e.target.children[i].className === "todoElement todoFocus") {
+        if (e.target.children[i].className === "todoName todoFocus") {
             e.target.children[i].classList.remove("todoFocus");
         }
     }
@@ -200,17 +190,18 @@ function viewTodoList() {
     
     function addTodo(value, list) {
         //todo,done 리스트에 값이 1개 이상일때 버튼 생성 (클리어)
-        viewBtn(todoListStorage[todoKey].todos, completedBtn, TodoCompleted);
-        viewBtn(todoListStorage[todoKey].dones, clearBtn, clearDoneList);
+        viewMoveBtn(todoListStorage[todoKey].todos, completedBtn, TodoCompleted);
+        viewMoveBtn(todoListStorage[todoKey].dones, clearBtn, clearDoneList);
 
         if (value.length > 0) {
             for (var i = 0; value.length > i; i++) {
                 var li = document.createElement("li");
+                li.classList.add("todoElement");
                 var checkBox = document.createElement("input");
                 checkBox.setAttribute("type", "checkbox");
                 var span = document.createElement("span");
                 span.innerText = value[i];
-                span.classList.add("todoElement");
+                span.classList.add("todoName");
                 var btn = document.createElement("button");
                 btn.innerText = "X";
                 btn.classList.add("deleteBtn");
@@ -234,11 +225,11 @@ function viewTodoList() {
 
     function resetList(list) {
         while (list.children.length > 0) {
-            list.firstChild.remove();
+            list.children[0].remove();
         }
     }
 
-    function viewBtn(list,btn,fn){
+    function viewMoveBtn(list,btn,fn){
         if (list.length > 0) {
             btn.classList.remove("hide");
             btn.addEventListener("click", fn);
@@ -267,7 +258,10 @@ function removeCalender() {
         for (var j = 0; j < 7; j++) {
             var removeDate = date.children[0].children[i].children[j];
             removeDate.innerText = "";
-            removeDate.classList.remove(removeDate.classList[0]);
+            if (removeDate.className !== "") {
+                removeDate.classList.remove("clickDateSet");
+                removeDate.classList.remove(removeDate.classList[0]);
+            }
             removeDate.removeEventListener("click", clickDate);
         }
     }
@@ -305,7 +299,7 @@ function clickDate(event) {
         event.target.classList.add("clickEffect");
         nowClick = event.target;
     }
-    var clickDateValue = event.target.classList[0];
+    var clickDateValue = event.target.classList[1];
     var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateValue);
     clickView(clickDateResult);
     todoListHandler(clickDateResult);
@@ -353,6 +347,7 @@ function viewCalender() {
             var firstDate = date.children[0].children[inputWeek].children[firstDay];
             firstDate.innerText = i;
             firstDate.addEventListener("click", clickDate);
+            firstDate.classList.add("clickDateSet");
             firstDate.classList.add(i);
             inputDay = firstDay;
             inputDay++;
@@ -362,6 +357,7 @@ function viewCalender() {
                 var dayOther = date.children[0].children[inputWeek].children[inputDay];
                 dayOther.innerText = i;
                 dayOther.addEventListener("click", clickDate);
+                dayOther.classList.add("clickDateSet");
                 dayOther.classList.add(i);
                 inputDay++;
             } else {
@@ -372,6 +368,7 @@ function viewCalender() {
                 //변수 따로 지정 이유 : 주가 바뀌어서
                 daySun.innerText = i;
                 daySun.addEventListener("click", clickDate);
+                daySun.classList.add("clickDateSet");
                 daySun.classList.add(i);
                 inputDay++;
             }
