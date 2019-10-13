@@ -14,6 +14,7 @@ var todoListCount = document.querySelector(".todoList-count");
 var nowDate = new Date();
 //버튼 누름에 따라서 바뀌는 년도,월
 var nowClick;
+//클릭 날짜 표시 변수
 var todoKey;
 var todoListStorage = {};
 
@@ -190,9 +191,8 @@ function viewTodoList() {
     
     function addTodo(value, list) {
         //todo,done 리스트에 값이 1개 이상일때 버튼 생성 (클리어)
-        viewMoveBtn(todoListStorage[todoKey].todos, completedBtn, TodoCompleted);
-        viewMoveBtn(todoListStorage[todoKey].dones, clearBtn, clearDoneList);
-
+        viewClearBtn(todoListStorage[todoKey].todos, completedBtn, TodoCompleted);
+        viewClearBtn(todoListStorage[todoKey].dones, clearBtn, clearDoneList);
         if (value.length > 0) {
             for (var i = 0; value.length > i; i++) {
                 var li = document.createElement("li");
@@ -229,7 +229,7 @@ function viewTodoList() {
         }
     }
 
-    function viewMoveBtn(list,btn,fn){
+    function viewClearBtn(list,btn,fn){
         if (list.length > 0) {
             btn.classList.remove("hide");
             btn.addEventListener("click", fn);
@@ -240,7 +240,7 @@ function viewTodoList() {
 
 }
 
-function todoListHandler(todoDate) {
+function makeTodoKey(todoDate) {
     var month = todoDate.getMonth() + 1;
     var monthValue = `${month < 10 ? "0" + month : month}`;
     var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
@@ -279,15 +279,7 @@ function calenderHandler(event) {
     viewCalender();
 }
 
-function clickDate(event) {
-    //이전 날짜 투두리스트 제거
-    while (todoList.children.length > 0 ) { 
-        todoList.firstChild.remove();
-    }
-    while (doneList.children.length > 0 ) { 
-        doneList.firstChild.remove();
-    }
- 
+function clickDate(event) { 
     if (nowClick === undefined) {
         event.target.classList.add("clickEffect");
         nowClick = event.target;
@@ -299,10 +291,10 @@ function clickDate(event) {
         event.target.classList.add("clickEffect");
         nowClick = event.target;
     }
-    var clickDateValue = event.target.classList[1];
-    var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateValue);
+    var clickDateNum = event.target.classList[1];
+    var clickDateResult = new Date(nowDate.getFullYear(), nowDate.getMonth(), clickDateNum);
     clickView(clickDateResult);
-    todoListHandler(clickDateResult);
+    makeTodoKey(clickDateResult);
 }
 
 function clickView(dateValue) {
@@ -365,7 +357,7 @@ function viewCalender() {
                 inputWeek++;
                 inputDay = 0;
                 var daySun = date.children[0].children[inputWeek].children[inputDay];
-                //변수 따로 지정 이유 : 주가 바뀌어서
+                //변수 따로 지정 이유 : 주가 바뀌고, 일요일로 변경
                 daySun.innerText = i;
                 daySun.addEventListener("click", clickDate);
                 daySun.classList.add("clickDateSet");
@@ -379,7 +371,7 @@ function viewCalender() {
 function init() {
     viewCalender();
     clickView(nowDate);
-    todoListHandler(nowDate);
+    makeTodoKey(nowDate);
     nextMonth.addEventListener("click", calenderHandler);
     backMonth.addEventListener("click", calenderHandler);
     inputTodo.addEventListener("keydown", function(e) {

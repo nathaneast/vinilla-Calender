@@ -3,8 +3,9 @@ html, body {
     background-color: rgb(53, 72, 90);
     z-index: -1;
 }
+
 body{
-    height: 100%
+    height: 100%;
 }
 
 .container{
@@ -91,7 +92,7 @@ button:hover{
 
 /* 달력 */
 .calender-Month-Year{
-    display: flex;
+    display: flex;ㄴ
     justify-content: space-between;
     height: 90px;
     font-size: 31px;
@@ -116,17 +117,22 @@ button:hover{
 /* 투두리스트 */
 .todos{
     display: flex;
-    width: auto;
-    height: auto;
-    flex-direction: column;
     width: 600px;
+    height: 500px;
+    flex-direction: column;
     color: #353b48;
     border: 1px solid white;
     border-radius: 55px;
     background-color: white;
     margin: 0px 10px;
+    overflow:auto;
+    -ms-overflow-style: none;
 }
-
+/* 스크롤바 투명하게 */
+::-webkit-scrollbar {
+    display:none;
+}
+    
 .todosHead{
     display: flex;
     flex-direction: column;
