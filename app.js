@@ -19,7 +19,7 @@ var todoKey;
 var todoListStorage = {};
 
 function TodoListForm() {
-        this.todo = {},
+        this.value = {},
         this.complete = false;
 }
 
@@ -32,7 +32,6 @@ function TodoCompleted() {
 
 function clearDoneList() {
     for (var i = 0; todoListStorage[todoKey].length > i; i++) {
-        console.log(i);
         if (todoListStorage[todoKey][i].complete === true) {
             todoListStorage[todoKey].splice(i ,1);
             clearDoneList();
