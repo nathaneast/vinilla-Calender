@@ -18,35 +18,35 @@ var nowClick;
 var todoKey;
 var todoListStorage = {};
 
-
 function TodoListForm() {
-        this.todos = [],
-        this.dones = []
+        this.todo = {},
+        this.complete = false;
 }
 
-//todo값 모두 done으로 이동
 function TodoCompleted() {
-    for(var i = 0; todoListStorage[todoKey].todos.length > i; i++) {
-        todoListStorage[todoKey].dones.push(todoListStorage[todoKey].todos[i]);
+    for(var i = 0; todoListStorage[todoKey].length > i; i++) {
+        todoListStorage[todoKey][i].complete = true;
     }
-    todoListStorage[todoKey].todos.length = 0;
     viewTodoList();
 }
 
-//done값 모두 삭제
 function clearDoneList() {
-    todoListStorage[todoKey].dones.length = 0;
+    for (var i = 0; todoListStorage[todoKey].length > i; i++) {
+        console.log(i);
+        if (todoListStorage[todoKey][i].complete === true) {
+            todoListStorage[todoKey].splice(i ,1);
+            clearDoneList();
+        }
+    }
     viewTodoList();
 }
 
 function editTodo(e) {
     var todoEleAll = document.querySelectorAll(".todoName");
-    var index;
     for (var i = 0; todoEleAll.length > i; i++) {
         todoEleAll[i].removeEventListener("dblclick", editTodo);
     }
     var li = e.target.parentNode;
-    li.classList.add("editIndex");
     for (var i = 0; li.children.length > i; i++) {
         li.children[i].classList.add("hide");
     }
@@ -54,29 +54,13 @@ function editTodo(e) {
     editInput.classList.add("editing");
     li.appendChild(editInput);
     editInput.focus();
-    for (var i = 0; li.parentNode.children.length > i; i++) {
-        if (li.parentNode.children[i].className === "todoElement editIndex") {
-            index = i;
-        }
-    }
-    if (li.parentNode.className === "todo-List") {
-        editInput.value = todoListStorage[todoKey].todos[index];
-    } else {
-        editInput.value = todoListStorage[todoKey].dones[index];
-    }
     li.removeEventListener("mouseover", todoMouseOver);
     li.removeEventListener("mouseleave", todoMouseLeave);
     editInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter" && editInput.value !== "") {
-            if (li.parentNode.className === "todo-List") {
-                todoListStorage[todoKey].todos[index] = editInput.value;
-            } else {
-                todoListStorage[todoKey].dones[index] = editInput.value;
-            }
-            // e.target.remove();
+            var storageIndex = li.classList[1];
+            todoListStorage[todoKey][storageIndex].value = editInput.value;
             e.target.blur();
-            //이벤트 타겟이 포커스를 잃는다?
-            // viewTodoList();
         }
     });
     editInput.addEventListener("blur", function (e) {
@@ -86,43 +70,15 @@ function editTodo(e) {
 
 function moveTodo(e) {
     var li = e.target.parentNode;
-    li.classList.add("moveIndex");
-    var todos = todoListStorage[todoKey].todos;
-    var dones = todoListStorage[todoKey].dones;
-
-    if (li.parentNode.className === "todo-List") {
-        moveHandler(todoList, dones, todos);
-    } else {
-        moveHandler(doneList, todos, dones);
-    }
-
-    function moveHandler(list, add, del) {
-        for (var i = 0; list.children.length > i; i++) {
-            if (list.children[i].className === "todoElement moveIndex") {
-                add.push(del[i]);
-                del.splice(i, 1);
-            }
-        }
-    }
+    var StorageIndex = li.classList[1];
+    todoListStorage[todoKey][StorageIndex].complete = !todoListStorage[todoKey][StorageIndex].complete;
     viewTodoList();
 }
 
 function todoRemove(e) {
-    var list = e.target.parentNode.parentNode;
-    //버튼의.li.리스트 (투두,던)
     var li = e.target.parentNode;
-    li.classList.add("RemoveIndex");
-    for (var i = 0; list.children.length > i; i++) {
-        if (list.className === "todo-List") {
-            if (list.children[i].className === "todoElement RemoveIndex") {
-                todoListStorage[todoKey].todos.splice(i, 1);
-            }
-        } else {
-            if (list.children[i].className === "todoElement RemoveIndex") {
-                todoListStorage[todoKey].dones.splice(i, 1);
-            }
-        }
-    }
+    var StorageIndex = li.classList[1];
+    todoListStorage[todoKey].splice(StorageIndex , 1);
     viewTodoList();
 }
 
@@ -151,14 +107,19 @@ function todoMouseLeave(e) {
 function addTodoList() {
     if (todoListStorage[todoKey] === undefined) {
         //저장소에 투두키값 없으면
-        var selectTodo = new TodoListForm();
-        selectTodo.todos.push(inputTodo.value);
-        todoListStorage[todoKey] = selectTodo;
+        var arr = [];
+        var newTodoForm = new TodoListForm();
+        newTodoForm.value = inputTodo.value;
+        newTodoForm.complete = false;
+        arr.push(newTodoForm);
+        todoListStorage[todoKey] = arr;
     } else {
         //저장소에 투두키값 있으면
-        var addTodo = todoListStorage[todoKey];
-        addTodo.todos.push(inputTodo.value);
-        todoListStorage[todoKey] = addTodo;
+        var todoKeyValue = todoListStorage[todoKey];
+        var addTodoForm = new TodoListForm();
+        addTodoForm.value = inputTodo.value;
+        addTodoForm.complete = false;
+        todoKeyValue.push(addTodoForm);
     }
     inputTodo.value = "";
     viewTodoList();
@@ -175,11 +136,9 @@ function viewTodoList() {
 
     //저장소에 선택 날짜 todoList 있으면 웹에 출력
     if (todoListStorage[todoKey] !== undefined) {
-        addTodo(todoListStorage[todoKey].todos, todoList);
-        addTodo(todoListStorage[todoKey].dones, doneList);
-
-        if (todoListStorage[todoKey].todos.length > 0) {
-            todoListCount.innerText = "todo count : " + todoListStorage[todoKey].todos.length;
+        addTodo();
+        if (todoListStorage[todoKey].length > 0) {
+            todoListCount.innerText = "todo count : " + todoListStorage[todoKey].length;
         } else {
         todoListCount.innerText = "Add To do ^.^";
         }
@@ -189,24 +148,31 @@ function viewTodoList() {
         todoListCount.innerText = "Add To do :)";
     }
     
-    function addTodo(value, list) {
+    function addTodo() {
         //todo,done 리스트에 값이 1개 이상일때 버튼 생성 (클리어)
-        viewClearBtn(todoListStorage[todoKey].todos, completedBtn, TodoCompleted);
-        viewClearBtn(todoListStorage[todoKey].dones, clearBtn, clearDoneList);
-        if (value.length > 0) {
-            for (var i = 0; value.length > i; i++) {
+        viewClearBtn(todoListStorage[todoKey], completedBtn, TodoCompleted);
+        viewClearBtn(todoListStorage[todoKey], clearBtn, clearDoneList);
+        if (todoListStorage[todoKey].length > 0) {
+            for (var i = 0; todoListStorage[todoKey].length > i; i++) {
                 var li = document.createElement("li");
                 li.classList.add("todoElement");
+                li.classList.add(i);
                 var checkBox = document.createElement("input");
                 checkBox.setAttribute("type", "checkbox");
                 var span = document.createElement("span");
-                span.innerText = value[i];
+                span.innerText = todoListStorage[todoKey][i].value;
                 span.classList.add("todoName");
                 var btn = document.createElement("button");
-                btn.innerText = "X";
+                btn.innerText = "x";
                 btn.classList.add("deleteBtn");
                 btn.classList.add("hide");
-                list.appendChild(li);
+                //데이터 비교 complete가 true면 던리스트에 추가
+                if (todoListStorage[todoKey][i].complete === false) {
+                    todoList.appendChild(li);
+                } else {
+                    doneList.appendChild(li);
+                    checkBox.setAttribute("checked", "checked");
+                }
                 li.appendChild(checkBox);
                 li.appendChild(span);
                 li.appendChild(btn);
@@ -215,9 +181,6 @@ function viewTodoList() {
                 span.addEventListener("dblclick", editTodo);
                 btn.addEventListener("click", todoRemove);
                 checkBox.addEventListener("click", moveTodo);
-                if (list === doneList) {
-                    checkBox.setAttribute("checked", "checked");
-                }
             }
             
         }
@@ -244,7 +207,7 @@ function makeTodoKey(todoDate) {
     var month = todoDate.getMonth() + 1;
     var monthValue = `${month < 10 ? "0" + month : month}`;
     var dateValue = `${todoDate.getDate() < 10 ? "0" + todoDate.getDate() : todoDate.getDate()}`;
-    todoKey = `todo${todoDate.getFullYear()}${monthValue}${dateValue}`; 
+    todoKey = `${todoDate.getFullYear()}${monthValue}${dateValue}`; 
     viewTodoList();
 }
 

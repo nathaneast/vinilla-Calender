@@ -92,7 +92,7 @@ button:hover{
 
 /* 달력 */
 .calender-Month-Year{
-    display: flex;ㄴ
+    display: flex;
     justify-content: space-between;
     height: 90px;
     font-size: 31px;
@@ -126,7 +126,6 @@ button:hover{
     background-color: white;
     margin: 0px 10px;
     overflow:auto;
-    -ms-overflow-style: none;
 }
 /* 스크롤바 투명하게 */
 ::-webkit-scrollbar {
